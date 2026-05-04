@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#fbf1f3" />
+    <meta name="description" content="Lista de pendientes elegante con prioridades por color, sublistas y archivo de tareas completadas." />
+    <title>Lista de pendientes</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Agenda personal</p>
+          <h1>Lista de pendientes</h1>
+          <p class="sync-status" id="syncStatus">Sincronizacion local</p>
+        </div>
+        <button class="icon-button" id="installButton" type="button" title="Instalar app" hidden>
+          <span aria-hidden="true">+</span>
+          <span class="sr-only">Instalar app</span>
+        </button>
+      </header>
+
+      <section class="entry-panel" aria-label="Crear pendiente">
+        <label class="field-label" for="taskInput">Pendiente principal</label>
+        <textarea id="taskInput" rows="3" placeholder="Ejemplo: mercar, pagar servicios, enviar recibo..."></textarea>
+
+        <label class="field-label" for="detailsInput">Detalles opcionales</label>
+        <textarea id="detailsInput" class="details-entry" rows="4" placeholder="Un detalle por linea: carne, papas, valor del pago, referencia, paso pendiente..."></textarea>
+
+        <div class="priority-row" role="radiogroup" aria-label="Prioridad">
+          <label class="priority-choice high">
+            <input type="radio" name="priority" value="high" />
+            <span>Alta</span>
+          </label>
+          <label class="priority-choice medium">
+            <input type="radio" name="priority" value="medium" checked />
+            <span>Media</span>
+          </label>
+          <label class="priority-choice low">
+            <input type="radio" name="priority" value="low" />
+            <span>Baja</span>
+          </label>
+        </div>
+
+        <div class="action-row">
+          <p>La lista se ordena por prioridad y conserva el orden de llegada.</p>
+          <button class="primary-button" id="addButton" type="button">Agregar</button>
+        </div>
+      </section>
+
+      <section class="controls" aria-label="Opciones de tareas completadas">
+        <div>
+          <h2>Al completar</h2>
+          <p>Decide si una tarea terminada se guarda en el archivo o se elimina.</p>
+        </div>
+        <select id="completeMode" aria-label="Accion al completar">
+          <option value="ask">Preguntar</option>
+          <option value="archive">Archivar</option>
+          <option value="delete">Eliminar</option>
+        </select>
+      </section>
+
+      <section class="list-section" aria-label="Tareas pendientes">
+        <div class="section-heading">
+          <h2>Pendientes</h2>
+          <span id="pendingCount">0</span>
+        </div>
+        <div class="task-list" id="taskList"></div>
+      </section>
+
+      <section class="list-section archived" aria-label="Tareas archivadas">
+        <details>
+          <summary>
+            <span>Archivadas</span>
+            <span id="archiveCount">0</span>
+          </summary>
+          <div class="task-list" id="archiveList"></div>
+        </details>
+      </section>
+    </main>
+
+    <dialog id="finishDialog">
+      <form method="dialog">
+        <h2>Tarea terminada</h2>
+        <p>Quieres archivarla o eliminarla definitivamente?</p>
+        <div class="dialog-actions">
+          <button value="archive" class="secondary-button">Archivar</button>
+          <button value="delete" class="primary-button danger">Eliminar</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>
