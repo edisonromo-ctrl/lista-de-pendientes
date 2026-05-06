@@ -1,24 +1,31 @@
 .project-logo {
-  width: clamp(86px, 18vw, 126px);
-  aspect-ratio: 1;
+  width: clamp(104px, 20vw, 140px);
+  height: clamp(104px, 20vw, 140px);
   border-radius: 999px;
   display: block;
   object-fit: contain;
   object-position: center;
+  background: #fffdfb;
 }
 
 .app-credit img {
   width: 76px;
-  aspect-ratio: 1;
+  height: 76px;
   border-radius: 999px;
   display: block;
   object-fit: contain;
   object-position: center;
+  background: #fffdfb;
 }
 
 @media (max-width: 560px) {
-  .project-logo,
-  .app-credit img {
+  .project-logo {
     width: 112px;
+    height: 112px;
+  }
+
+  .app-credit img {
+    width: 82px;
+    height: 82px;
   }
 }
