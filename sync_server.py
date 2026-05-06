@@ -25,6 +25,7 @@ def normalize_state(value):
 def normalize_task(task):
     task = task if isinstance(task, dict) else {}
     task["details"] = task.get("details") if isinstance(task.get("details"), list) else []
+    task["collapsed"] = bool(task.get("collapsed", False))
     return task
 
 
@@ -61,6 +62,19 @@ def apply_action(state, action):
         if task and isinstance(action.get("detail"), dict):
             task["details"].append(action["detail"])
 
+    if action_type == "editTask":
+        collection = state["archived"] if action.get("archived") else state["tasks"]
+        task = find_task(collection, action.get("taskId"))
+        if task:
+            task["text"] = action.get("text") or task.get("text")
+            task["priority"] = action.get("priority") or task.get("priority")
+
+    if action_type == "toggleCollapsed":
+        collection = state["archived"] if action.get("archived") else state["tasks"]
+        task = find_task(collection, action.get("taskId"))
+        if task:
+            task["collapsed"] = not bool(task.get("collapsed"))
+
     if action_type == "toggleDetail":
         task = find_task(state["tasks"], action.get("taskId"))
         detail = find_task(task.get("details", []), action.get("detailId")) if task else None
@@ -80,6 +94,15 @@ def apply_action(state, action):
                 if action.get("mode") == "archive":
                     finished["completedAt"] = int(time.time() * 1000)
                     state["archived"].append(finished)
+                break
+
+    if action_type == "unarchiveTask":
+        task_id = action.get("taskId")
+        for index, task in enumerate(state["archived"]):
+            if task.get("id") == task_id:
+                restored = state["archived"].pop(index)
+                restored.pop("completedAt", None)
+                state["tasks"].append(restored)
                 break
 
     if action_type == "deleteTask":
