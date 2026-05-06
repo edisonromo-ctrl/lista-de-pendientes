@@ -12,11 +12,15 @@ const pendingCount = document.querySelector("#pendingCount");
 const archiveCount = document.querySelector("#archiveCount");
 const completeMode = document.querySelector("#completeMode");
 const finishDialog = document.querySelector("#finishDialog");
+const editDialog = document.querySelector("#editDialog");
+const editTaskInput = document.querySelector("#editTaskInput");
 const installButton = document.querySelector("#installButton");
 const syncStatus = document.querySelector("#syncStatus");
 
 let deferredInstallPrompt = null;
 let pendingCompletionId = null;
+let editingTaskId = null;
+let editingArchived = false;
 let state = loadLocalState();
 let sharedMode = false;
 let sharedVersion = 0;
@@ -44,6 +48,7 @@ function normalizeTasks(tasks) {
   return tasks.map((task) => ({
     ...task,
     details: Array.isArray(task.details) ? task.details : [],
+    collapsed: Boolean(task.collapsed),
   }));
 }
 
@@ -148,6 +153,23 @@ function applyAction(target, action) {
     return;
   }
 
+  if (action.type === "editTask") {
+    const collection = action.archived ? target.archived : target.tasks;
+    const task = collection.find((item) => item.id === action.taskId);
+    if (task) {
+      task.text = action.text || task.text;
+      task.priority = action.priority || task.priority;
+    }
+    return;
+  }
+
+  if (action.type === "toggleCollapsed") {
+    const collection = action.archived ? target.archived : target.tasks;
+    const task = collection.find((item) => item.id === action.taskId);
+    if (task) task.collapsed = !Boolean(task.collapsed);
+    return;
+  }
+
   if (action.type === "toggleDetail") {
     const task = target.tasks.find((item) => item.id === action.taskId);
     const detail = task?.details.find((item) => item.id === action.detailId);
@@ -168,6 +190,15 @@ function applyAction(target, action) {
     if (action.mode === "archive") {
       target.archived.push({ ...task, completedAt: Date.now() });
     }
+    return;
+  }
+
+  if (action.type === "unarchiveTask") {
+    const index = target.archived.findIndex((task) => task.id === action.taskId);
+    if (index < 0) return;
+    const [task] = target.archived.splice(index, 1);
+    delete task.completedAt;
+    target.tasks.push(task);
     return;
   }
 
@@ -285,8 +316,40 @@ function taskElement(task, archived) {
   const detailCount = task.details?.length || 0;
   meta.textContent = `${PRIORITY_LABEL[task.priority]} - ${formatDate(task.createdAt)}${detailCount ? ` - ${detailCount} detalle${detailCount === 1 ? "" : "s"}` : ""}`;
 
-  header.append(title, meta);
+  const tools = document.createElement("div");
+  tools.className = "task-inline-tools";
+
+  const editButton = document.createElement("button");
+  editButton.type = "button";
+  editButton.className = "text-tool-button";
+  editButton.textContent = "Editar";
+  editButton.addEventListener("click", () => openEditTask(task.id, archived));
+  tools.append(editButton);
+
+  if (detailCount) {
+    const collapseButton = document.createElement("button");
+    collapseButton.type = "button";
+    collapseButton.className = "text-tool-button";
+    collapseButton.textContent = task.collapsed ? "Desplegar" : "Contraer";
+    collapseButton.addEventListener("click", () => toggleCollapsed(task.id, archived));
+    tools.append(collapseButton);
+  }
+
+  header.append(title, meta, tools);
   body.append(header, detailsElement(task, archived));
+
+  const sideActions = document.createElement("div");
+  sideActions.className = "task-actions";
+
+  if (archived) {
+    const restoreButton = document.createElement("button");
+    restoreButton.type = "button";
+    restoreButton.className = "restore-button";
+    restoreButton.title = "Desarchivar pendiente";
+    restoreButton.textContent = "R";
+    restoreButton.addEventListener("click", () => unarchiveTask(task.id));
+    sideActions.append(restoreButton);
+  }
 
   const deleteButton = document.createElement("button");
   deleteButton.type = "button";
@@ -294,14 +357,19 @@ function taskElement(task, archived) {
   deleteButton.title = archived ? "Eliminar del archivo" : "Eliminar pendiente";
   deleteButton.textContent = "x";
   deleteButton.addEventListener("click", () => deleteTask(task.id, archived));
+  sideActions.append(deleteButton);
 
-  article.append(checkbox, body, deleteButton);
+  article.append(checkbox, body, sideActions);
   return article;
 }
 
 function detailsElement(task, archived) {
   const wrapper = document.createElement("div");
   wrapper.className = "sublist";
+  if (task.collapsed) {
+    wrapper.classList.add("collapsed");
+    return wrapper;
+  }
 
   if (task.details?.length) {
     const list = document.createElement("div");
@@ -393,6 +461,45 @@ function removeDetail(taskId, detailId) {
   commitAction({ type: "removeDetail", taskId, detailId });
 }
 
+function openEditTask(taskId, archived) {
+  const collection = archived ? state.archived : state.tasks;
+  const task = collection.find((item) => item.id === taskId);
+  if (!task) return;
+
+  editingTaskId = taskId;
+  editingArchived = archived;
+  editTaskInput.value = task.text;
+  document.querySelectorAll("input[name='editPriority']").forEach((input) => {
+    input.checked = input.value === task.priority;
+  });
+  editDialog.showModal();
+  editTaskInput.focus();
+}
+
+function selectedEditPriority() {
+  return document.querySelector("input[name='editPriority']:checked")?.value || "medium";
+}
+
+function saveEditedTask() {
+  const text = editTaskInput.value.trim();
+  if (!editingTaskId || !text) return;
+  commitAction({
+    type: "editTask",
+    taskId: editingTaskId,
+    archived: editingArchived,
+    text,
+    priority: selectedEditPriority(),
+  });
+}
+
+function toggleCollapsed(taskId, archived) {
+  commitAction({ type: "toggleCollapsed", taskId, archived });
+}
+
+function unarchiveTask(taskId) {
+  commitAction({ type: "unarchiveTask", taskId });
+}
+
 function completeTask(taskId) {
   if (state.completeMode === "ask") {
     pendingCompletionId = taskId;
@@ -429,6 +536,15 @@ finishDialog.addEventListener("close", () => {
   }
   pendingCompletionId = null;
   finishDialog.returnValue = "";
+});
+
+editDialog.addEventListener("close", () => {
+  if (editDialog.returnValue === "save") {
+    saveEditedTask();
+  }
+  editingTaskId = null;
+  editingArchived = false;
+  editDialog.returnValue = "";
 });
 
 window.addEventListener("beforeinstallprompt", (event) => {
