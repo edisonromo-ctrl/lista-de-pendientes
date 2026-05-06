@@ -1,11 +1,19 @@
 .project-logo {
   width: clamp(86px, 18vw, 126px);
+  aspect-ratio: 1;
   border-radius: 999px;
+  display: block;
+  object-fit: contain;
+  object-position: center;
 }
 
 .app-credit img {
   width: 76px;
+  aspect-ratio: 1;
   border-radius: 999px;
+  display: block;
+  object-fit: contain;
+  object-position: center;
 }
 
 @media (max-width: 560px) {
