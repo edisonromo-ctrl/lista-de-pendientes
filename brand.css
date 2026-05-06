@@ -1,0 +1,16 @@
+.project-logo {
+  width: clamp(86px, 18vw, 126px);
+  border-radius: 999px;
+}
+
+.app-credit img {
+  width: 76px;
+  border-radius: 999px;
+}
+
+@media (max-width: 560px) {
+  .project-logo,
+  .app-credit img {
+    width: 112px;
+  }
+}
