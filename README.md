@@ -9,6 +9,8 @@ Aplicacion web elegante para registrar tareas por texto, asignar prioridad por c
 3. Agrega detalles opcionales, como lista de mercado, pagos, referencias o pasos.
 4. Elige prioridad: alta roja, media amarilla o baja verde.
 5. Marca detalles internos o la tarea completa cuando esten terminados.
+6. Usa `Editar` para corregir el texto o la prioridad de un pendiente ya creado.
+7. Usa `Contraer` y `Desplegar` para ocultar o mostrar listas internas largas.
 
 Las tareas se guardan automaticamente en el navegador.
 
@@ -23,6 +25,12 @@ python sync_server.py
 Abre `http://127.0.0.1:4174/` en este computador. En el celular o en otro equipo conectado a la misma red Wi-Fi, abre `http://IP-DE-ESTE-COMPUTADOR:4174/`.
 
 La lista se guarda en `lista_compartida.json` y se actualiza automaticamente cada pocos segundos.
+
+Las tareas archivadas se pueden desarchivar con el boton `R`, volviendo a la lista principal con sus detalles y prioridad.
+
+## Creditos
+
+Aplicacion creada por Lina Rodriguez para el proyecto Hogar de Larry.
 
 ## Orden de la lista
 
