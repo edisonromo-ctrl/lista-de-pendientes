@@ -68,6 +68,20 @@ button:disabled {
   padding: 16px 2px 22px;
 }
 
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.project-logo {
+  width: clamp(92px, 22vw, 142px);
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 10px 24px rgba(92, 48, 63, 0.1);
+}
+
 .eyebrow {
   margin: 0 0 6px;
   color: var(--rose);
@@ -344,9 +358,32 @@ summary span:last-child {
   font-size: 0.78rem;
 }
 
+.task-inline-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 9px;
+}
+
+.text-tool-button {
+  min-height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 253, 251, 0.78);
+  color: var(--rose-deep);
+  font-size: 0.78rem;
+  font-weight: 900;
+  padding: 0 10px;
+}
+
+.text-tool-button:hover {
+  border-color: var(--rose);
+}
+
 .delete-button,
 .delete-detail-button,
-.add-detail-button {
+.add-detail-button,
+.restore-button {
   width: 38px;
   height: 38px;
   border: 1px solid var(--line);
@@ -354,6 +391,20 @@ summary span:last-child {
   background: #fffdfb;
   color: var(--muted);
   font-weight: 900;
+}
+
+.task-actions {
+  display: grid;
+  gap: 7px;
+}
+
+.restore-button {
+  background: var(--green-bg);
+  color: #4f765b;
+}
+
+.restore-button:hover {
+  border-color: var(--green);
 }
 
 .delete-button:hover,
@@ -368,6 +419,10 @@ summary span:last-child {
   gap: 8px;
   margin-top: 12px;
   padding-left: 16px;
+}
+
+.sublist.collapsed {
+  display: none;
 }
 
 .sublist::before {
@@ -509,6 +564,30 @@ dialog p {
   gap: 10px;
 }
 
+.edit-priority-row {
+  margin: 12px 0 16px;
+}
+
+.app-credit {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0 8px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 253, 251, 0.72);
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.app-credit img {
+  width: 92px;
+  height: auto;
+  flex: 0 0 auto;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -530,6 +609,17 @@ dialog p {
   .action-row {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .brand-lockup,
+  .app-credit {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .project-logo,
+  .app-credit img {
+    width: 132px;
   }
 
   .priority-row {
