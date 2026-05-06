@@ -1,4 +1,4 @@
-const CACHE_NAME = "lista-pendientes-v7";
+const CACHE_NAME = "lista-pendientes-v8";
 const ASSETS = [
   "./",
   "./index.html",
@@ -7,7 +7,7 @@ const ASSETS = [
   "./app.js",
   "./manifest.webmanifest",
   "./icon.svg",
-  "./hogar-de-larry-logo.png?v=2",
+  "./hogar-de-larry-logo-v2.jpg",
 ];
 
 self.addEventListener("install", (event) => {
