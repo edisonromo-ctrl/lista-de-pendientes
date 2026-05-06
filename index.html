@@ -12,10 +12,13 @@
   <body>
     <main class="app-shell">
       <header class="topbar">
-        <div>
-          <p class="eyebrow">Agenda personal</p>
-          <h1>Lista de pendientes</h1>
-          <p class="sync-status" id="syncStatus">Sincronizacion local</p>
+        <div class="brand-lockup">
+          <img class="project-logo" src="hogar-de-larry-logo.svg" alt="Hogar de Larry" />
+          <div>
+            <p class="eyebrow">Agenda personal</p>
+            <h1>Lista de pendientes</h1>
+            <p class="sync-status" id="syncStatus">Sincronizacion local</p>
+          </div>
         </div>
         <button class="icon-button" id="installButton" type="button" title="Instalar app" hidden>
           <span aria-hidden="true">+</span>
@@ -80,6 +83,11 @@
           <div class="task-list" id="archiveList"></div>
         </details>
       </section>
+
+      <footer class="app-credit">
+        <img src="hogar-de-larry-logo.svg" alt="" />
+        <p>Creada por Lina Rodriguez para el proyecto Hogar de Larry.</p>
+      </footer>
     </main>
 
     <dialog id="finishDialog">
@@ -89,6 +97,32 @@
         <div class="dialog-actions">
           <button value="archive" class="secondary-button">Archivar</button>
           <button value="delete" class="primary-button danger">Eliminar</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="editDialog">
+      <form method="dialog">
+        <h2>Editar pendiente</h2>
+        <label class="field-label" for="editTaskInput">Pendiente principal</label>
+        <textarea id="editTaskInput" rows="4"></textarea>
+        <div class="priority-row edit-priority-row" role="radiogroup" aria-label="Editar prioridad">
+          <label class="priority-choice high">
+            <input type="radio" name="editPriority" value="high" />
+            <span>Alta</span>
+          </label>
+          <label class="priority-choice medium">
+            <input type="radio" name="editPriority" value="medium" />
+            <span>Media</span>
+          </label>
+          <label class="priority-choice low">
+            <input type="radio" name="editPriority" value="low" />
+            <span>Baja</span>
+          </label>
+        </div>
+        <div class="dialog-actions">
+          <button value="cancel" class="secondary-button">Cancelar</button>
+          <button value="save" class="primary-button">Guardar</button>
         </div>
       </form>
     </dialog>
