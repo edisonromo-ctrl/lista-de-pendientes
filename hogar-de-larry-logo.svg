@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 180" role="img" aria-labelledby="title desc">
+  <title id="title">Hogar de Larry</title>
+  <desc id="desc">Marca tipografica del proyecto Hogar de Larry</desc>
+  <rect width="520" height="180" rx="36" fill="#fffdfb"/>
+  <path d="M76 87 130 44l54 43v57a9 9 0 0 1-9 9h-31v-42h-28v42H85a9 9 0 0 1-9-9Z" fill="#f4e2e6" stroke="#7b2f49" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M94 80c17 3 30 13 36 30 6-17 19-27 36-30" fill="none" stroke="#b44d6b" stroke-width="8" stroke-linecap="round"/>
+  <text x="218" y="82" fill="#7b2f49" font-family="Georgia, 'Times New Roman', serif" font-size="38" font-weight="700">Hogar de Larry</text>
+  <text x="220" y="122" fill="#806b73" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">Proyecto familiar</text>
+</svg>
